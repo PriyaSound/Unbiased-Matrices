@@ -9,7 +9,17 @@
 using namespace std;
 
 
-
+//Things to be done.
+//1. Initialize s=16, k=4, s2=256
+//2. Create a GH(16,1)
+//3. Take each row of GH(16,1), repeat it 16 times and put it in a matrix.In this way, 16 matrices are obtained. The ordered collection of these  matrices is called R[s][s][s].
+//4. Find the Hadamard product of each of the above matrices with a Hadamard matrix of order 16.
+//5. Thus 16 matrices of the order 16x16 have been obtained. 
+//6. Multiply each of the above matrices with a diagonal matrix consisting of a Hadamard matrix H.
+//7. Similarly multiply each matrix with a diagonal matrix that contains one of many in a class of unbiased Hadamard matrices of order 16.
+//8. Convert each member of the group to a row transformation matrix applied on the Hadamard matrix of order 16.
+//9. This should give you another Hadamard matrix.
+//8. Count the number of and check if the resulting Hadamard matrices are unbiased.
 
 //Global variable
 //integers
@@ -19,6 +29,7 @@ const int k=3;//k
 
 //matrix
 
+int unbiased_Hadamard_of_order_s[s/2][s][s];
 int product[s][s];//multiplication table will save in it if we call the function multiplication_table
 int H[s][s];//this is a hadamard matrix of size s in the form we use in our report. 
 int R[s][s][s];//Made by reapition of rows of generalized Hadamard matrix
