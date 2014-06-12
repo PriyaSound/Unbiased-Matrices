@@ -10,30 +10,38 @@ using namespace std;
 
 
 //Things to be done.
-//1. Initialize s=16, k=4, s2=256
-//2. Create a GH(16,1)
-//3. Take each row of GH(16,1), repeat it 16 times and put it in a matrix.In this way, 16 matrices are obtained. The ordered collection of these  matrices is called R[s][s][s].
-//4. Find the Hadamard product of each of the above matrices with a Hadamard matrix of order 16.
-//5. Thus 16 matrices of the order 16x16 have been obtained. 
-//6. Multiply each of the above matrices with a diagonal matrix consisting of a Hadamard matrix H.
+//D1. Initialize s=16, k=4, s2=256
+//D2. Create a GH(16,1)
+//D3. Take each row of GH(16,1), repeat it 16 times and put it in a matrix.In this way, 16 matrices are obtained. The ordered collection of these  matrices is called R[s][s][s].
+//D4. Find the Hadamard product of each of the above matrices with a Hadamard matrix of order 16.
+//D5. Thus 16 matrices of the order 16x16 have been obtained. 
+//D6. Multiply each of the above matrices with a diagonal matrix consisting of a Hadamard matrix H.
 //7. Similarly multiply each matrix with a diagonal matrix that contains one of many in a class of unbiased Hadamard matrices of order 16.
-//8. Convert each member of the group to a row transformation matrix applied on the Hadamard matrix of order 16.
-//9. This should give you another Hadamard matrix.
+//D8. Convert each member of the group to a row transformation matrix applied on the Hadamard matrix of order 16.
+//D9. This should give you another Hadamard matrix.
 //8. Count the number of and check if the resulting Hadamard matrices are unbiased.
 
 //Global variable
 //integers
-const int s=8;//size of our matrix in the form of 2^k
+const int s=16;//size of our matrix in the form of 2^k
 const int s2 = s*s;
-const int k=3;//k
-
+const int k=4;//k
+const int number_of_unbiased_Hadamard_of_order_s=s/2;
 //matrix
 
-int unbiased_Hadamard_of_order_s[s/2][s][s];
+int unbiased_Hadamard_of_order_s[s/2][s][s]={{{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},{1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1},{1,1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,1,-1,-1},{1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,1,-1,-1,1},{1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1},{1,-1,1,-1,-1,1,-1,1,1,-1,1,-1,-1,1,-1,1},{1,1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,1,1},{1,-1,-1,1,-1,1,1,-1,1,-1,-1,1,-1,1,1,-1},{1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1},{1,-1,1,-1,1,-1,1,-1,-1,1,-1,1,-1,1,-1,1},{1,1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,-1,1,1},{1,-1,-1,1,1,-1,-1,1,-1,1,1,-1,-1,1,1,-1},{1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1},{1,-1,1,-1,-1,1,-1,1,-1,1,-1,1,1,-1,1,-1},{1,1,-1,-1,-1,-1,1,1,-1,-1,1,1,1,1,-1,-1},{1,-1,-1,1,-1,1,1,-1,-1,1,1,-1,1,-1,-1,1}},{{1,1,1,1,1,-1,1,-1,1,1,-1,-1,-1,1,1,-1},{1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,-1,1,1},{1,1,-1,-1,1,-1,-1,1,1,1,1,1,-1,1,-1,1},{1,-1,-1,1,1,1,-1,-1,1,-1,1,-1,-1,-1,-1,-1},{1,1,1,1,1,-1,1,-1,-1,-1,1,1,1,-1,-1,1},{1,-1,1,-1,1,1,1,1,-1,1,1,-1,1,1,-1,-1},{1,1,-1,-1,1,-1,-1,1,-1,-1,-1,-1,1,-1,1,-1},{1,-1,-1,1,1,1,-1,-1,-1,1,-1,1,1,1,1,1},{1,1,1,1,-1,1,-1,1,1,1,-1,-1,1,-1,-1,1},{1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,1,1,1,-1,-1},{1,1,-1,-1,-1,1,1,-1,1,1,1,1,1,-1,1,-1},{1,-1,-1,1,-1,-1,1,1,1,-1,1,-1,1,1,1,1},{-1,-1,-1,-1,1,-1,1,-1,1,1,-1,-1,1,-1,-1,1},{-1,1,-1,1,1,1,1,1,1,-1,-1,1,1,1,-1,-1},{-1,-1,1,1,1,-1,-1,1,1,1,1,1,1,-1,1,-1},{-1,1,1,-1,1,1,-1,-1,1,-1,1,-1,1,1,1,1}},{{1,1,1,1,1,1,-1,-1,1,-1,-1,1,-1,1,-1,1},{1,-1,1,-1,1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1},{1,1,-1,-1,1,1,1,1,1,-1,1,-1,-1,1,1,-1},{1,-1,-1,1,1,-1,1,-1,1,1,1,1,-1,-1,1,1},{1,1,1,1,1,1,-1,-1,-1,1,1,-1,1,-1,1,-1},{1,-1,1,-1,1,-1,-1,1,-1,-1,1,1,1,1,1,1},{1,1,-1,-1,1,1,1,1,-1,1,-1,1,1,-1,-1,1},{1,-1,-1,1,1,-1,1,-1,-1,-1,-1,-1,1,1,-1,-1},{1,1,1,1,-1,-1,1,1,1,-1,-1,1,1,-1,1,-1},{1,-1,1,-1,-1,1,1,-1,1,1,-1,-1,1,1,1,1},{1,1,-1,-1,-1,-1,-1,-1,1,-1,1,-1,1,-1,-1,1},{1,-1,-1,1,-1,1,-1,1,1,1,1,1,1,1,-1,-1},{-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,1,1,-1,1,-1},{-1,1,-1,1,1,-1,-1,1,1,1,-1,-1,1,1,1,1},{-1,-1,1,1,1,1,1,1,1,-1,1,-1,1,-1,-1,1},{-1,1,1,-1,1,-1,1,-1,1,1,1,1,1,1,-1,-1}},{{1,1,1,1,1,-1,-1,1,1,-1,1,-1,-1,-1,1,1},{1,-1,1,-1,1,1,-1,-1,1,1,1,1,-1,1,1,-1},{1,1,-1,-1,1,-1,1,-1,1,-1,-1,1,-1,-1,-1,-1},{1,-1,-1,1,1,1,1,1,1,1,-1,-1,-1,1,-1,1},{1,1,1,1,1,-1,-1,1,-1,1,-1,1,1,1,-1,-1},{1,-1,1,-1,1,1,-1,-1,-1,-1,-1,-1,1,-1,-1,1},{1,1,-1,-1,1,-1,1,-1,-1,1,1,-1,1,1,1,1},{1,-1,-1,1,1,1,1,1,-1,-1,1,1,1,-1,1,-1},{1,1,1,1,-1,1,1,-1,1,-1,1,-1,1,1,-1,-1},{1,-1,1,-1,-1,-1,1,1,1,1,1,1,1,-1,-1,1},{1,1,-1,-1,-1,1,-1,1,1,-1,-1,1,1,1,1,1},{1,-1,-1,1,-1,-1,-1,-1,1,1,-1,-1,1,-1,1,-1},{-1,-1,-1,-1,1,-1,-1,1,1,-1,1,-1,1,1,-1,-1},{-1,1,-1,1,1,1,-1,-1,1,1,1,1,1,-1,-1,1},{-1,-1,1,1,1,-1,1,-1,1,-1,-1,1,1,1,1,1},{-1,1,1,-1,1,1,1,1,1,1,-1,-1,1,-1,1,-1}},
+	{{1,1,1,-1,1,1,1,-1,1,1,1,-1,-1,-1,-1,1},{1,1,-1,1,1,1,-1,1,1,1,-1,1,-1,-1,1,-1},{1,-1,1,1,1,-1,1,1,1,-1,1,1,-1,1,-1,-1},{-1,1,1,1,-1,1,1,1,-1,1,1,1,1,-1,-1,-1},{1,1,1,-1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1},{1,1,-1,1,1,1,-1,1,-1,-1,1,-1,1,1,-1,1},{1,-1,1,1,1,-1,1,1,-1,1,-1,-1,1,-1,1,1},{-1,1,1,1,-1,1,1,1,1,-1,-1,-1,-1,1,1,1},{1,1,1,-1,-1,-1,-1,1,1,1,1,-1,1,1,1,-1},{1,1,-1,1,-1,-1,1,-1,1,1,-1,1,1,1,-1,1},{1,-1,1,1,-1,1,-1,-1,1,-1,1,1,1,-1,1,1},{-1,1,1,1,1,-1,-1,-1,-1,1,1,1,-1,1,1,1},{-1,-1,-1,1,1,1,1,-1,1,1,1,-1,1,1,1,-1},{-1,-1,1,-1,1,1,-1,1,1,1,-1,1,1,1,-1,1},{-1,1,-1,-1,1,-1,1,1,1,-1,1,1,1,-1,1,1},{1,-1,-1,-1,-1,1,1,1,-1,1,1,1,-1,1,1,1}},{{1,1,1,-1,1,1,-1,1,1,-1,1,1,1,-1,-1,-1},{1,1,-1,1,1,1,1,-1,-1,1,1,1,-1,1,-1,-1},{1,-1,1,1,-1,1,1,1,1,1,1,-1,-1,-1,1,-1},{-1,1,1,1,1,-1,1,1,1,1,-1,1,-1,-1,-1,1},{1,1,1,-1,1,1,-1,1,-1,1,-1,-1,-1,1,1,1},{1,1,-1,1,1,1,1,-1,1,-1,-1,-1,1,-1,1,1},{1,-1,1,1,-1,1,1,1,-1,-1,-1,1,1,1,-1,1},{-1,1,1,1,1,-1,1,1,-1,-1,1,-1,1,1,1,-1},{1,1,1,-1,-1,-1,1,-1,1,-1,1,1,-1,1,1,1},{1,1,-1,1,-1,-1,-1,1,-1,1,1,1,1,-1,1,1},{1,-1,1,1,1,-1,-1,-1,1,1,1,-1,1,1,-1,1},{-1,1,1,1,-1,1,-1,-1,1,1,-1,1,1,1,1,-1},{-1,-1,-1,1,1,1,-1,1,1,-1,1,1,-1,1,1,1},{-1,-1,1,-1,1,1,1,-1,-1,1,1,1,1,-1,1,1},{-1,1,-1,-1,-1,1,1,1,1,1,1,-1,1,1,-1,1},{1,-1,-1,-1,1,-1,1,1,1,1,-1,1,1,1,1,-1}},{{1,1,1,-1,1,-1,1,1,-1,1,1,1,-1,-1,1,-1},{1,1,-1,1,-1,1,1,1,1,-1,1,1,-1,-1,-1,1},{1,-1,1,1,1,1,1,-1,1,1,-1,1,1,-1,-1,-1},{-1,1,1,1,1,1,-1,1,1,1,1,-1,-1,1,-1,-1},{1,1,1,-1,1,-1,1,1,1,-1,-1,-1,1,1,-1,1},{1,1,-1,1,-1,1,1,1,-1,1,-1,-1,1,1,1,-1},{1,-1,1,1,1,1,1,-1,-1,-1,1,-1,-1,1,1,1},{-1,1,1,1,1,1,-1,1,-1,-1,-1,1,1,-1,1,1},{1,1,1,-1,-1,1,-1,-1,-1,1,1,1,1,1,-1,1},{1,1,-1,1,1,-1,-1,-1,1,-1,1,1,1,1,1,-1},{1,-1,1,1,-1,-1,-1,1,1,1,-1,1,-1,1,1,1},{-1,1,1,1,-1,-1,1,-1,1,1,1,-1,1,-1,1,1},{-1,-1,-1,1,1,-1,1,1,-1,1,1,1,1,1,-1,1},{-1,-1,1,-1,-1,1,1,1,1,-1,1,1,1,1,1,-1},{-1,1,-1,-1,1,1,1,-1,1,1,-1,1,-1,1,1,1},{1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,-1,1,1}},{{1,1,1,-1,-1,1,1,1,1,1,-1,1,-1,1,-1,-1},{1,1,-1,1,1,-1,1,1,1,1,1,-1,1,-1,-1,-1},{1,-1,1,1,1,1,-1,1,-1,1,1,1,-1,-1,-1,1},{-1,1,1,1,1,1,1,-1,1,-1,1,1,-1,-1,1,-1},{1,1,1,-1,-1,1,1,1,-1,-1,1,-1,1,-1,1,1},{1,1,-1,1,1,-1,1,1,-1,-1,-1,1,-1,1,1,1},{1,-1,1,1,1,1,-1,1,1,-1,-1,-1,1,1,1,-1},{-1,1,1,1,1,1,1,-1,-1,1,-1,-1,1,1,-1,1},{1,1,1,-1,1,-1,-1,-1,1,1,-1,1,1,-1,1,1},{1,1,-1,1,-1,1,-1,-1,1,1,1,-1,-1,1,1,1},{1,-1,1,1,-1,-1,1,-1,-1,1,1,1,1,1,1,-1},{-1,1,1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1},{-1,-1,-1,1,-1,1,1,1,1,1,-1,1,1,-1,1,1},{-1,-1,1,-1,1,-1,1,1,1,1,1,-1,-1,1,1,1},{-1,1,-1,-1,1,1,-1,1,-1,1,1,1,1,1,1,-1},{1,-1,-1,-1,1,1,1,-1,1,-1,1,1,1,1,-1,1}}};
+int inner_product(int* a, int*b, int n);
+int** make_Hadamard_matrix(int order);
+int** negative_matrix(int** a, int n);
+//This function generates a Hadamard matrix by multiplying a diagonal row of Hadamard matrices unbiased_Hadamard_of_order_s[n] with the matrix M[m]
+int** unbiased_Hadamard_of_order_s2(int n, int m); 
+bool check_Hadamard(int**, int);
+
 int product[s][s];//multiplication table will save in it if we call the function multiplication_table
 int H[s][s];//this is a hadamard matrix of size s in the form we use in our report. 
 int R[s][s][s];//Made by reapition of rows of generalized Hadamard matrix
-int IR[s][s][s]={0};// this is the matrix of form IxIxI, IxIxR, .... we should call the function generat_IR to fill this function bace in index i
+int IR[s][s][s]={0};// this is the matrix of form IxIxI, IxIxR, .... we should call the function generate_IR to fill this function bace in index i
 int M[s][s][s]={{0}};// the componentwise_multiplication of H and R
 //following four variable are for making the Hadamardf matrix
 int H1[s][s] = {{0}};
@@ -47,8 +55,8 @@ int replac[s][s2][s2];
 //declaration of function
 bool check_weighing(int );//check if the matrix is weighning
 bool check_BUSH(int** );//check if the matrix is bush type or not;
-void multiplication_table();//save the multiplication table in matrix product using multiplication function
-int multiplication(int ,int);//return the multiplication of two arguments using binary code
+void group_operation_table();//save the multiplication table in matrix product using multiplication function
+int group_operation(int ,int);//return the multiplication of two arguments using binary code
 int*  binary(int );//change the argument to binary
 int integer(int* );//recieve a binary and change it to an integer
 
@@ -58,10 +66,11 @@ int** matrix_multiplication(int[s][s][s] ,int [s][s][s]);
 int** matrix_multiplication(int**,int [s][s]);
 int** matrix_multiplication(int[s][s] ,int**);
 int** matrix_multiplication(int a[s][s2][s2],int** b, int y);
-int** matrix_multiplication(int** ,int**);
+int** matrix_multiplication(int** ,int**, int);
 ////return the transposition of the argument
 int** Trans(int a[s][s]);
 int** Trans(int a[s][s2][s2], int);
+int** Trans(int**a , int n);
 //the four following function do kronecker product
 int** Kronecker(int** a, int ** b, int i=s, int j=s );
 int** Kronecker(int a[s][s], int ** b ,  int j =s);
@@ -76,12 +85,11 @@ void print(int b[s][s2][s2], int y);
 void print1(int[2*s][2*s]);
 void print(int**, int i =s);
 //
-void generat_IR (int,int ,int ,int ,int );//save the IxIxR in IR matrix, the third int shoul be 1.
-void generat_HH();//save Hadamard matrix in H1 and H2
+void generate_IR (int,int ,int ,int ,int );//save the IxIxR in IR matrix, the third int shoul be 1.
 
 
 void fill_row();//this function fill the variable row
-void generat_GH();//this function save a generalized hadamard matrix in variable p[][] which is anarray object of class polynomail
+void generate_GH();//this function save a generalized hadamard matrix in variable p[][] which is anarray object of class polynomail
 void make_matrix_M();//fill w by componentwise product of H and  R
 void make_matrix_R();//this function fill R[s][s][s]
 void print_matrix_P();//this matrix print the array P using specific method
@@ -112,103 +120,62 @@ class polynomial
 };
 
 
-//the two following variables are used to make a generqalized hadamard matrix
+//the two following variables are used to make a generalized hadamard matrix
 polynomial p[s][s];
 polynomial row[s];
 
 int main()
 { 
    
-   //initilization of h2;
-   for(int i= 0; i<4; i++)
-   {
-      //  h2[0][i]=1;
-      //   h2[i][0] = 1;
-   }
-   // h1[0][0]=1;
-   //  h1[0][1]=1;
-   //  h1[1][0]=1;
-   //  h1[1][1]=-1;
+  fill_row();//this function fill the variable row
+  group_operation_table();//save the multiplication table in matrix product using multiplication function
+  generate_GH();//this function save a generalized hadamard matrix in variable p[][] which is anarray object of class polynomail
+  for(int i=0; i < s; i++)
+	 {      
+		 IR[i][0][i]=1;
+       	         generate_IR(0,i,1,i,i);
+	 }
+			        
+  make_matrix_R();//this function fill R[s][s][s]
+  make_matrix_M();//fill w by componentwise product of H and  R
+ // print(unbiased_Hadamard_of_order_s2(1,1),s2);
+ bool check[number_of_unbiased_Hadamard_of_order_s*s][number_of_unbiased_Hadamard_of_order_s*s]={{false}};
+bool unbiased[number_of_unbiased_Hadamard_of_order_s*s][number_of_unbiased_Hadamard_of_order_s*s]={{false}};
+ int index_i=-1,index_j=-1;
 
-   //  h2[1][1] =1;
-   //  h2[1][2] =-1;
-   //  h2[1][3] =-1;
-//   h2[2][1] =-1;
-//   h2[2][2] =1;
-//   h2[2][3] =-1;
-//   h2[3][1] =-1;
-//   h2[3][2] =-1;
-//   h2[3][3]=1;
-   //
-   //for(int i=0;i<s;i++)
-   //  {
-   //   for(int j=0;j<s;j++)
-//	 cout<<[i][j]<<" ";
-   //   cout<<endl;
-//   }
-   //multiplication_table();
-   /*  for(int i = 0; i < s; i++)
-       {
-       for(int j = 0;  j < s; j++)
-       {
-       cout<<product[i][j]<<" ";
-       }
-      cout<<endl;
-      }*/
-   //  int d[s][s]={{0,1,1,1,1,1,1,1},{1,0,1,1,1,1,1,1},{1,1,1,1,1,0,1,1},{1,1,0,1,1,1,1,1},{1,1,1,0,1,1,1,1},{1,1,1,1,0,1,1,1},{1,1,1,1,1,1,0,1},{1,1,1,1,1,1,1,0}} ;
-   //  int h[s][s]={{2,0,2,2,2,2,2,9},{2,8,2,2,2,2,4,9},{2,2,6,2,2,2,5,9},{2,2,2,2,2,2,2,9},{2,2,2,2,0,2,4,9},{2,2,2,2,2,2,2,9},{2,9,2,2,2,2,2,9},{1,1,1,1,1,1,1,9} } ;
-   // print( Kronecker(d,h), s2);
-   
-   
-/* print( matrix_multiplication(h,d));
-   cout<<endl;
-   print( matrix_multiplication(Trans(h),d));
-   cout<<endl;
-   print(matrix_multiplication(h, Trans(d)));
-   cout<<endl;
-   print(matrix_multiplication(Trans(h),Trans(d)));
-*/
-   ///// DO NOY change any thing in the foloowing part
-   for(int i=0; i < s; i++)
-   {      
-     IR[i][0][i]=1;
-     generat_IR(0,i,1,i,i);
-   }
-   generat_HH();
-   fill_row();
-   generat_GH();
-   make_matrix_R();
-   make_matrix_M();
-   replaced();
-//////
-   /* all 8 matrices of order 64 t0 64 in replac are weghing matrix W(64,8);
-   for(int u = 0; u < s; u++)
-   {
-      cout<<"check "<<u+1<<" :"<<endl;
-      check_weighing(u);
-      }*/
-   ///////
- 
-   // check_BUSH( matrix_multiplication(replac,Trans(replac,1),0));
+  for(int n=0;n<number_of_unbiased_Hadamard_of_order_s;n++)
+  {
+	  for(int m=0;m<s;m++)
+	  {
+		  index_i++;
+		  index_j=-1;
+		  for(int i=0;i<number_of_unbiased_Hadamard_of_order_s;i++)
+		  {
+			  
+			  for(int j=0;j<s;j++)
+			  {
+				index_j++;
+				if(check[index_i][index_j]!= true && index_i!=index_j)
+				  {
+					  
+					  unbiased[index_i][index_j]=check_Hadamard(matrix_multiplication(unbiased_Hadamard_of_order_s2(n,m),Trans(unbiased_Hadamard_of_order_s2(i,j),s2),s2),s2);
+					  check[index_i][index_j]=true;
+					  check[index_j][index_i]=true;
+					  unbiased[index_j][index_i] = unbiased[index_i][index_j];
+				  }
+				if(index_i==index_j)
+					unbiased[index_i][index_j]=true;
 
-  //  print(replac,1);
-      //  cout<<endl;
-   //  print(Trans(replac,1),64);
-//   cout<<endl;
-   //  cout<<"Weighing matrix of order 64"<<endl;
-   //  print(replac,1);
-   //  cout<<"Bush type Hadamard matrix of order 64"<<endl;
-   
-//   print(matrix_multiplication(replac,Trans(replac,1),0),64);
-   // cout<<"Printing h1"<<endl;
-   print(replac);
-   //print_row();
-   // print_matrix_P();
-   // print(h2);
-  
-   
+				  cout<<unbiased[index_i][index_j];
+			  }
+		  }
+	cout<<endl;	  
+	  }
+	  
+  }
 
-   for(int i=0;i<s;i++)
+      
+/*   for(int i=0;i<s;i++)
    {
 	   for(int j=i+1;j<s;j++)
 	   {
@@ -221,41 +188,98 @@ int main()
 		   print(matrix_multiplication(replac,Trans(replac,j),i),s2);
 	   }
    }
-
-			  
-   
-   /*
-   //The following code checks if a random row of 1,0,-1 generated is unbiased with any of the rows of any of the s weighing matrices.
-   long long int index_max,ind;
-   int num=0;
-   ind = s2;
-   cout<<"The current index is"<<endl;
-   index_max = pow(3,ind);
-   cout<<"Index_max"<<index_max<<endl;
-   for(int l=0;l<s;l++)
-   {// l is the index for the weighing matrix.
-	   for(int m =0;m<s2;m++)
-	   {//m is the index for the rows of a weighing matrix.
-		   num=0;
-		   for(int i=0;i<s2;i++)
-		   {
-			   cout<<replac[l][m][i]<<" ";
-		   }
-		   cout<<endl;
-		   for(int p=0;p<index_max;p++)
-			   {// p is the index of the row being generated, whose unbiasedness with the rows of the existing weighing matrices must be checked.
-					   if(check_unbiased(p,replac,l,m)==true)
-						{num=num+1;}
-			   }
-                  //num calculates the number of such unbiased rows found.
-		  cout<<"num ="<<num<<endl;
-	   }
-   }
-   */
-   return 0;
+*/
+ int a=1,b=1,c=1,d=2; 
+cout<<check_Hadamard(matrix_multiplication(unbiased_Hadamard_of_order_s2(a,b),Trans(unbiased_Hadamard_of_order_s2(c,d),s2),s2),s2);
+  return 0;
 
 }
 
+/*
+bool check_if_2_matrices_are_equal(int** a, int** b,int n)
+{
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			if(a[i][j]!=b[i][j])
+				return false;
+		}
+	}
+	return true;
+}
+*/
+int** Trans(int** a, int n)
+{
+	int** trans = new int*[n];
+	for(int i=0;i<n;i++)
+	{
+		trans[i] = new int[n];
+	}
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			trans[i][j]=a[j][i];
+		}
+	}
+	return trans;
+}
+
+bool check_Hadamard(int** a, int n)
+{
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			if(a[i][j]!=16 && a[i][j]!=-16)
+				return false;
+		}
+	}
+	for(int i=0;i<n;i++)
+	{
+		for(int j=i+1;j<n;j++)
+		{
+			if(inner_product(a[i],a[j],n)!=0)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+//Generates a Hadamard matrix of order order(has to be a power of 2). 
+int** make_Hadamard_matrix(int order)
+{
+	int** a = new int*[s];
+        for(int i=0;i<s;i++)
+	{
+		a[i] = new int[s];
+	}
+	for(int i=0;i<s;i++)
+	{
+		for(int j=0;j<s;j++)
+		{
+			a[i][j] = pow(-1,inner_product(binary(i),binary(j),k));
+		}
+	}
+	
+	return (a);
+
+}
+
+
+//Returns inner product of 2 arrays.
+int inner_product(int* a,int* b, int n)
+{
+  int sum=0; 
+  for(int i=0;i<n;i++)
+   {
+	sum = sum + a[i]*b[i];
+   }
+  return(sum);
+}
 bool check_symmetric(int** p, int n)
 {
 	for(int i=0;i<n;i++)
@@ -323,6 +347,9 @@ void print(int p[s2])
 	}
 	cout<<endl;
 }
+
+//Generates all rows of length index, and checks if any of them are unbiased with the row_index^th row of the a_index^th matrix of the 3-dimensional matrix a. Returns true if the row is unbiased 
+//and false otherwise.
 bool check_unbiased(int ind, int a[s][s2][s2], int a_index, int row_index)
 {
         int* row_gen = generate_all_rows(ind);
@@ -358,7 +385,63 @@ bool check_unbiased(int ind, int a[s][s2][s2], int a_index, int row_index)
 	}
 }
 
+// This function prints the negative of a number.
+int** negative_matrix(int** a, int n)
+{
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			a[i][j] = -a[i][j];
+		}
+	}
+	return a;
+}
 
+//This function generates a Hadamard matrix by multiplying a diagonal row of Hadamard matrices unbiased_Hadamard_of_order_s[n] with the matrix M[m]
+int** unbiased_Hadamard_of_order_s2(int n, int m)
+{
+	
+	int** Hadamard = new int*[s2];
+	for(int i=0;i<s2;i++)
+	{
+		Hadamard[i] = new int[s2];
+	}
+	int** p ;
+	for(int i=0;i<s;i++)
+	{
+		for(int j=0;j<s;j++)
+		{
+			//print(matrix_multiplication(unbiased_Hadamard_of_order_s[n], IR[abs(M[m][i][j])]));
+		//	print(IR[abs(M[m][i][j])]);
+			//print(unbiased_Hadamard_of_order_s[n]);
+			
+			p = matrix_multiplication(unbiased_Hadamard_of_order_s[n], IR[abs(M[m][i][j])-1]);
+			if(M[m][i][j]<0)
+			{
+				p = negative_matrix(p,s);
+			}
+			
+			//cout<<endl;
+			//cout<<"Hadamard matrix ="<<endl;
+			//print(unbiased_Hadamard_of_order_s[n]);
+			//cout<<"IR matrix ="<<endl;
+			//print(IR[abs(M[m][i][j])-1]);
+			//cout<<"Product matrix p="<<endl;
+			//print(p);	
+			for(int k=0;k<s;k++)
+			{
+				for(int l=0;l<s;l++)
+				{
+					Hadamard[i*s +k][j*s +l]=p[k][l];
+				}
+			}
+		}
+	}
+	return Hadamard;
+}
+
+//This function only checks if the matrix expanded from M[d], which is in replac[d] is a weighing matrix or not. 
 bool check_weighing(int d)
 {
    for(int i = 0; i < s2; i++)
@@ -402,6 +485,7 @@ bool check_weighing(int d)
    return true;
 }
 
+// Checks if a matrix A is of Bush type or not.
 bool check_BUSH(int** A)
 {
    int sum = 0;
@@ -467,17 +551,22 @@ bool check_BUSH(int** A)
    return true;
 }
 
-void multiplication_table()
+//Computes the operation table of the group G, over which the generalized Hadamard matrix is constructed. The elements of G are indexed by numbers, each element of G is the binary expansion of 
+//that index.
+void group_operation_table()
 {
    for(int i= 0; i < s; i++)
    {
       for(int j = 0; j < s; j++)
       {
-	 product[i][j] = multiplication(i,j);
+	 product[i][j] = group_operation(i,j);
       }
    }
  }
-int multiplication(int y, int z)
+
+//The group operation of G over which the Generalized Hadamard matrix is construct has as its group operation, the addition of binary representations of the 2 elements. The parameters of the
+//function are indices of the group elements whose operation is to be computed. 
+int group_operation(int y, int z)
 {
    int result = 0;
    int count = 0; 
@@ -494,6 +583,8 @@ int multiplication(int y, int z)
      
      return(integer(bin3));
 }
+
+//Returns the binary array of an integer a.
 int*  binary(int a)
 {
   
@@ -508,6 +599,7 @@ int*  binary(int a)
    return(p);
 }
 
+//Returns the integer corresponding to the binary expansion in the array a.
 int integer(int* a)
 {
   
@@ -520,22 +612,21 @@ int integer(int* a)
     return result;
 }
 
-
+//The following matrix_multiplication functions multiply 2 matrices in the usual sense.
 int** matrix_multiplication(int a[s][s],int b[s][s])
 {
-   
-   int** c =new int*[s2];
-   for(int i=0; i < s2; i++)
+   int** c =new int*[s];
+   for(int i=0; i < s; i++)
    {
-      c[i] = new int[s2];
+      c[i] = new int[s];
    }
    int sum;
-   for(int i = 0; i < s2; i++)
+   for(int i = 0; i < s; i++)
    {
-      for(int j = 0; j < s2; j++)
+      for(int j = 0; j < s; j++)
       {
 	 sum =0;
-	 for(int o =0; o < s2; o++)
+	 for(int o =0; o < s; o++)
 	 {
 	    sum = sum + (a[i][o]*b[o][j]);
 	 }
@@ -547,6 +638,7 @@ int** matrix_multiplication(int a[s][s],int b[s][s])
 }
 int** matrix_multiplication(int a[s][s2][s2] ,int b[s][s2][s2], int y)
 {
+	cout<<"2"<<endl;
     int** c =new int*[s2];
    for(int i=0; i < s2; i++)
    {
@@ -572,6 +664,7 @@ int** matrix_multiplication(int a[s][s2][s2] ,int b[s][s2][s2], int y)
 int** matrix_multiplication(int a[s][s2][s2],int** b, int y)
 {
    
+	cout<<"3"<<endl;
    int** c =new int*[s2];
    for(int i=0; i < s2; i++)
    {
@@ -596,6 +689,7 @@ int** matrix_multiplication(int a[s][s2][s2],int** b, int y)
 int** matrix_multiplication(int** a,int b[s][s])
 {
    
+	cout<<"4"<<endl;
    int** c =new int*[s];
    for(int i=0; i < s; i++)
    {
@@ -617,21 +711,20 @@ int** matrix_multiplication(int** a,int b[s][s])
    }
     return (c);
 }
-int** matrix_multiplication(int** a,int** b)
+int** matrix_multiplication(int** a,int** b,int n)
 {
-   
-   int** c =new int*[s];
-   for(int i=0; i < s; i++)
+   int** c =new int*[n];
+   for(int i=0; i < n; i++)
    {
-      c[i] = new int[s];
+      c[i] = new int[n];
    }
    int sum;
-   for(int i = 0; i < s; i++)
+   for(int i = 0; i < n; i++)
    {
-      for(int j = 0; j < s; j++)
+      for(int j = 0; j < n; j++)
       {
 	 sum =0;
-	 for(int o =0; o < s; o++)
+	 for(int o =0; o < n; o++)
 	 {
 	    sum = sum + (a[i][o]*b[o][j]);
 	 }
@@ -768,6 +861,17 @@ int** Kronecker(int a[s][s],int b[s][s])
    return c;
 }
 
+void print(int b[s2][s2])
+{
+	for(int i=0;i<s2;i++)
+	{
+		for(int j=0;j<s2;j++)
+		{
+			cout<<b[i][j]<<" ";
+		}
+		cout<<endl;
+	}
+}
 void print(const int a[s][s])
 {
      for(int i=0;i<s;i++)
@@ -839,7 +943,7 @@ void print(int** a , int k)
    }
 }
 
-void generat_IR(int indexi,int indexj,int size,int i,int index_IR)
+void generate_IR(int indexi,int indexj,int size,int i,int index_IR)
 {
         if(size==s)
                 return;
@@ -853,7 +957,7 @@ void generat_IR(int indexi,int indexj,int size,int i,int index_IR)
 			   IR[index_IR][indexi+size+m][indexj+size+l]=IR[index_IR][indexi+m][indexj+l];
 			 
                         }
-		generat_IR(indexi,indexj,2*size,i,index_IR);
+		generate_IR(indexi,indexj,2*size,i,index_IR);
         }
         else if(q==1)
         {
@@ -863,11 +967,13 @@ void generat_IR(int indexi,int indexj,int size,int i,int index_IR)
 			   IR[index_IR][indexi+size+m][indexj-size+l]=IR[index_IR][indexi+m][indexj+l];
 		
                         }
-		generat_IR(indexi,indexj-size,2*size,i,index_IR);
+		generate_IR(indexi,indexj-size,2*size,i,index_IR);
         }
 }
 
-void generat_HH()
+/*
+ * I dont think this function is needed.
+void generate_HH()
 {
      
    
@@ -896,6 +1002,7 @@ void generat_HH()
   
     
 }
+*/
 
 void fill_row()
 {
@@ -919,7 +1026,7 @@ void fill_row()
 
 
 
-void generat_GH()
+void generate_GH()
 {
    int c;
    if(s!=2)
@@ -958,7 +1065,20 @@ void generat_GH()
 
 void make_matrix_M()
 {
-   if(s==2)
+ int** H;
+	H=make_Hadamard_matrix(s);
+for(int i=0;i<s;i++)
+{
+	for(int j=0;j<s;j++)
+	{
+		for(int l=0;l<s;l++)
+		{
+			M[i][j][l] = H[j][l]*R[i][j][l];
+		}
+	}
+}
+/*	
+if(s==2)
   {
     for(int y =0 ; y <s ; y++)
       {
@@ -1012,6 +1132,7 @@ for(int y =0 ; y <s ; y++)
 	 }
       }
    }
+*/
 }
 
 void make_matrix_R()
@@ -1026,6 +1147,7 @@ void make_matrix_R()
                 }
         }
    }
+   print(R);
 }
 void print_matrix_P()
 {
