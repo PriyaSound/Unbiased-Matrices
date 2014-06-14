@@ -37,7 +37,9 @@ int** negative_matrix(int** a, int n);
 //This function generates a Hadamard matrix by multiplying a diagonal row of Hadamard matrices unbiased_Hadamard_of_order_s[n] with the matrix M[m]
 int** unbiased_Hadamard_of_order_s2(int n, int m); 
 bool check_Hadamard(int**, int);
-
+//This function definition is very hazy. For now it should satisfy us that it makes a Hadamard matrix such that any permutation of its rows of the form axaxaxa, where a is either I or R
+//is symmetric. 
+int** make_k();
 int product[s][s];//multiplication table will save in it if we call the function multiplication_table
 int H[s][s];//this is a hadamard matrix of size s in the form we use in our report. 
 int R[s][s][s];//Made by reapition of rows of generalized Hadamard matrix
@@ -142,7 +144,8 @@ int main()
  bool check[number_of_unbiased_Hadamard_of_order_s*s][number_of_unbiased_Hadamard_of_order_s*s]={{false}};
 bool unbiased[number_of_unbiased_Hadamard_of_order_s*s][number_of_unbiased_Hadamard_of_order_s*s]={{false}};
  int index_i=-1,index_j=-1;
-
+cout<<check_Hadamard(make_k()); 
+/*
   for(int n=0;n<number_of_unbiased_Hadamard_of_order_s;n++)
   {
 	  for(int m=0;m<s;m++)
@@ -173,7 +176,7 @@ bool unbiased[number_of_unbiased_Hadamard_of_order_s*s][number_of_unbiased_Hadam
 	  }
 	  
   }
-
+*/
       
 /*   for(int i=0;i<s;i++)
    {
@@ -209,6 +212,142 @@ bool check_if_2_matrices_are_equal(int** a, int** b,int n)
 	return true;
 }
 */
+// This function makes a Hadamard matrix of order s, which is symmetric under any of the permutations of the type axaxaxa where a is either I or R
+int** make_k()
+{
+	int** k = new int*[16];
+	int k1[4][4]={{1,1,1,-1},{1,1,-1,1},{1,-1,1,1},{-1,1,1,1}};
+	int k2[4][4]={{1,-1,1,1},{-1,1,1,1},{1,1,1,-1},{1,1,-1,1}};
+	int k3[4][4]={{1,1,-1,1},{1,1,1,-1},{-1,1,1,1},{1,-1,1,1}};
+	int k4[4][4]={{-1,1,1,1},{1,-1,1,1},{1,1,-1,1},{1,1,1,-1}};
+	for(int i=0;i<16;i++)
+	{
+		k[i] = new int[16];
+	}
+for(int i=0;i<4;i++)
+{
+	for(int j=0;j<4;j++)
+	{
+		k[i][j]=-k1[i][j];
+	}
+}
+for(int i=4;i<8;i++)
+{
+	for(int j=0;j<4;j++)
+	{
+		k[i][j]=k3[i][j];
+	}
+}
+for(int i=8;i<12;i++)
+{
+	for(int j=0;j<4;j++)
+	{
+		k[i][j]=k2[i][j];
+	}
+}
+for(int i=12;i<16;i++)
+{
+	for(int j=0;j<4;j++)
+	{
+		k[i][j]=k4[i][j];
+	}
+}
+
+//Second column block
+for(int i=0;i<4;i++)
+{
+	for(int j=4;j<8;j++)
+	{
+		k[i][j]=k3[i][j];
+	}
+}
+for(int i=4;i<8;i++)
+{
+	for(int j=4;j<8;j++)
+	{
+		k[i][j]=-k1[i][j];
+	}
+}
+for(int i=8;i<12;i++)
+{
+	for(int j=4;j<8;j++)
+	{
+		k[i][j]=k4[i][j];
+	}
+}
+for(int i=12;i<16;i++)
+{
+	for(int j=4;j<8;j++)
+	{
+		k[i][j]=k2[i][j];
+	}
+}
+// Third column block
+for(int i=0;i<4;i++)
+{
+	for(int j=8;j<12;j++)
+	{
+		k[i][j]=k2[i][j];
+	}
+}
+for(int i=4;i<8;i++)
+{
+	for(int j=8;j<12;j++)
+	{
+		k[i][j]=k4[i][j];
+	}
+}
+for(int i=8;i<12;i++)
+{
+	for(int j=8;j<12;j++)
+	{
+		k[i][j]=-k1[i][j];
+	}
+}
+for(int i=12;i<16;i++)
+{
+	for(int j=8;j<12;j++)
+	{
+		k[i][j]=k3[i][j];
+	}
+}
+//Fourth column block
+for(int i=0;i<4;i++)
+{
+	for(int j=12;j<16;j++)
+	{
+		k[i][j]=k4[i][j];
+	}
+}
+for(int i=4;i<8;i++)
+{
+	for(int j=12;j<16;j++)
+	{
+		k[i][j]=k2[i][j];
+	}
+}
+for(int i=8;i<12;i++)
+{
+	for(int j=12;j<16;j++)
+	{
+		k[i][j]=k3[i][j];
+	}
+}
+for(int i=12;i<16;i++)
+{
+	for(int j=12;j<16;j++)
+	{
+		k[i][j]=-k1[i][j];
+	}
+}
+
+return k;
+}
+
+
+int** make_symmetric_ki(int n)
+{
+
 int** Trans(int** a, int n)
 {
 	int** trans = new int*[n];
@@ -1073,66 +1212,11 @@ for(int i=0;i<s;i++)
 	{
 		for(int l=0;l<s;l++)
 		{
-			M[i][j][l] = H[j][l]*R[i][j][l];
+			M[i][j][l] = unbiased_Hadamard_of_order_s[0][j][l]*R[i][j][l];
 		}
 	}
 }
-/*	
-if(s==2)
-  {
-    for(int y =0 ; y <s ; y++)
-      {
-         for(int j=0;j<s;j++)
-         {
-            for(int l=0;l<s;l++)
-            {
-             
-	       M[y][j][l] = h1[j][l]*R[y][j][l];
-            }
-	    cout<<endl;
-         }
-      }
-  }
-if(s==4)
-{
-for(int y =0 ; y <s ; y++)
-      {
-         for(int j=0;j<s;j++)
-         {
-            for(int l=0;l<s;l++)
-            {
-               M[y][j][l] = h2[j][l]*R[y][j][l];
-            }
-         }
-      }
-}
-   if(s==8)
-   {
-      for(int y =0 ; y <s ; y++)
-      {
-	 for(int j=0;j<s;j++)
-	 {
-	    for(int k=0;k<s;k++)
-	    {
-	       M[y][j][k] = H1[j][k]*R[y][j][k];
-	    }
-	 }
-      }
-   }
-   if(s==16)
-   {
-      for(int y =0 ; y <s ; y++)
-      {
-	 for(int j=0;j<s;j++)
-	 {
-	    for(int k=0;k<s;k++)
-	    {
-	       M[y][j][k] = H2[j][k]*R[y][j][k];
-	    }
-	 }
-      }
-   }
-*/
+
 }
 
 void make_matrix_R()
